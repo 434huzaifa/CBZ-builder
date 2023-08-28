@@ -32,29 +32,33 @@ class App(ctk.CTk):
             self.grid_columnconfigure(3, weight=1)
             self.values = values
             self.rows = []
-        def add_row(self,r_n):
-            combobox = ctk.CTkOptionMenu(self,values=TYPE)
-            combobox2 = ctk.CTkOptionMenu(self,values=F_type)
-            button=ctk.CTkButton(self,text="X",command= lambda :self.removedata(r_n))
-            label = ctk.CTkLabel(self, text=self.values[r_n])
-            label.grid(row=r_n, column=0, padx=10, pady=(10, 0), sticky="w")
-            combobox.grid(row=r_n, column=1, padx=10, pady=(10, 0), sticky="w")
-            combobox2.grid(row=r_n, column=2, padx=10, pady=(10, 0), sticky="w")
-            button.grid(row=r_n, column=3, padx=10, pady=(10, 0), sticky="w")
-            self.rows.append({'label':label,'combo':combobox,'folder':combobox2})
 
+            for row,data in enumerate(values):
+                combobox = ctk.CTkOptionMenu(self,values=TYPE)
+                combobox2 = ctk.CTkOptionMenu(self,values=F_type)
+                button=ctk.CTkButton(self,text="X",command= lambda: self.removedata())
+                label = ctk.CTkLabel(self, text=data)
+                label.grid(row=row, column=0, padx=10, pady=(10, 0), sticky="w")
+                combobox.grid(row=row, column=1, padx=10, pady=(10, 0), sticky="w")
+                combobox2.grid(row=row, column=2, padx=10, pady=(10, 0), sticky="w")
+                button.grid(row=row, column=3, padx=10, pady=(10, 0), sticky="w")
+                self.rows.append({'label':label,'combo':combobox,'folder':combobox2})
+
+
+                
+            
         def get(self):
             all_data = []
             for row in self.rows:
                 all_data.append({'dst':row['label'].cget("text"),"type":row['combo'].get(),'f_type':row['folder'].get()})
             return all_data
         
-        def removedata(self,index):
-            print('\033[91m'+'index: ' + '\033[92m', index)
+        def removedata(self):
             # self.rows.pop(index)
             # TODO no idea
             # self.grid_remove(row=index)
             # self.add(combobox)
+            pass
 
     def __init__(self):
         super().__init__()
@@ -84,12 +88,8 @@ class App(ctk.CTk):
         if len(folder_selected)!=0:
             # self.scrollable_checkbox_frame.destroy()
             self.values.append(folder_selected)
-            global r
-            self.scrollable_checkbox_frame.add_row(r)
-            r+=1
-            # self.scrollable_checkbox_frame = self.MyScrollableCheckboxFrame(self, title="Folder list", values=self.values)
-            # self.scrollable_checkbox_frame.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="nsew",columnspan=2)
-            # print('\033[91m'+'folder_selected: ' + '\033[92m', folder_selected)
+            self.scrollable_checkbox_frame = self.MyScrollableCheckboxFrame(self, title="Folder list", values=self.values)
+            self.scrollable_checkbox_frame.grid(row=1, column=0, padx=10, pady=(10, 0), sticky="nsew",columnspan=2)
 
     def set_output(self):
         folder_selected = filedialog.askdirectory()
